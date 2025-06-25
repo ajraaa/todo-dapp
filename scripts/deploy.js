@@ -7,7 +7,7 @@ async function main() {
 
     await todoList.waitForDeployment();
 
-    console.log('TodoList contract deployed to: &{todoList.target}');
+    console.log(`TodoList contract deployed to: ${todoList.target}`);
 
     console.log("Creating initial task..");
     const tx1 = await todoList.createTask("Learn hardhat & solidity");

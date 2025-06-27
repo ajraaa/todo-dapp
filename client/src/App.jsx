@@ -149,104 +149,391 @@ function App() {
   }, [contract, account]);
 
   return (
-    <div style={{ maxWidth: '600px', margin: '50px auto', fontFamily: 'Arial, sans-serif', padding: '20px', border: '1px solid #ccc', borderRadius: '8px', boxShadow: '0 2px 10px rgba(0,0,0,0.1)' }}>
-      <h1 style={{ textAlign: 'center', color: '#333' }}>Decentralized To-Do List</h1>
-      {error && <p style={{ color: 'red', textAlign: 'center', backgroundColor: '#ffe6e6', padding: '10px', borderRadius: '4px' }}>Error: {error}</p>}
+    <div style={{ 
+      minHeight: '100vh', 
+      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', 
+      padding: '20px', 
+      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif' ,
+    }}>
+      <div style={{ maxWidth: '800px', margin: '0 auto' }}>
+        
+        {/* Main Container */}
+        <div style={{ 
+          backgroundColor: 'white', 
+          borderRadius: '20px', 
+          boxShadow: '0 20px 40px rgba(0,0,0,0.1)', 
+          overflow: 'hidden' 
+        }}>
+          
+          {/* Header */}
+          <div style={{ 
+            background: 'linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)', 
+            padding: '40px 30px', 
+            textAlign: 'center', 
+            color: 'white' 
+          }}>
+            <h1 style={{ 
+              fontSize: '2.5rem', 
+              fontWeight: 'bold', 
+              margin: '0 0 10px 0' 
+            }}>
+              🔗 Decentralized To-Do List
+            </h1>
+            <p style={{ 
+              fontSize: '1.1rem', 
+              opacity: '0.9', 
+              margin: '0' 
+            }}>
+              Manage your tasks on the blockchain
+            </p>
+          </div>
 
-      <div style={{ marginBottom: '20px', textAlign: 'center' }}>
-        {account ? (
-          <p style={{ color: '#007bff', fontWeight: 'bold' }}>Connected Account: {account.substring(0, 6)}...{account.slice(-4)}</p>
-        ) : (
-          <button
-            onClick={initWeb3}
-            style={{
-              backgroundColor: '#007bff',
-              color: 'white',
-              padding: '10px 20px',
-              border: 'none',
-              borderRadius: '5px',
-              cursor: 'pointer',
-              fontSize: '16px'
-            }}
-          >
-            Connect MetaMask
-          </button>
-        )}
+          {/* Connection Status */}
+          <div style={{ padding: '25px 30px', backgroundColor: '#f8fafc', borderBottom: '1px solid #e2e8f0' }}>
+            {account ? (
+              <div style={{ 
+                display: 'flex', 
+                alignItems: 'center', 
+                justifyContent: 'space-between', 
+                backgroundColor: '#dcfce7', 
+                border: '1px solid #bbf7d0', 
+                borderRadius: '12px', 
+                padding: '15px 20px' 
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <div style={{ 
+                    width: '12px', 
+                    height: '12px', 
+                    backgroundColor: '#22c55e', 
+                    borderRadius: '50%', 
+                    marginRight: '12px',
+                    animation: 'pulse 2s infinite'
+                  }}></div>
+                  <span style={{ 
+                    color: '#166534', 
+                    fontWeight: '600', 
+                    fontSize: '1rem' 
+                  }}>
+                    ✅ Connected to MetaMask
+                  </span>
+                </div>
+                <span style={{ 
+                  color: '#059669', 
+                  fontFamily: 'monospace', 
+                  fontSize: '0.9rem', 
+                  backgroundColor: '#a7f3d0', 
+                  padding: '6px 12px', 
+                  borderRadius: '20px',
+                  fontWeight: '500'
+                }}>
+                  {account.substring(0, 6)}...{account.slice(-4)}
+                </span>
+              </div>
+            ) : (
+              <div style={{ textAlign: 'center' }}>
+                <button
+                  onClick={initWeb3}
+                  style={{
+                    background: 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)',
+                    color: 'white',
+                    border: 'none',
+                    padding: '15px 30px',
+                    borderRadius: '12px',
+                    fontSize: '1.1rem',
+                    fontWeight: '600',
+                    cursor: 'pointer',
+                    transition: 'all 0.3s ease',
+                    boxShadow: '0 4px 12px rgba(59, 130, 246, 0.3)'
+                  }}
+                  onMouseOver={(e) => e.target.style.transform = 'translateY(-2px)'}
+                  onMouseOut={(e) => e.target.style.transform = 'translateY(0)'}
+                >
+                  🦊 Connect MetaMask Wallet
+                </button>
+              </div>
+            )}
+          </div>
+
+          {/* Error Message */}
+          {error && (
+            <div style={{ 
+              margin: '20px 30px 0', 
+              padding: '20px', 
+              backgroundColor: '#fef2f2', 
+              border: '1px solid #fecaca', 
+              borderRadius: '12px',
+              borderLeft: '4px solid #ef4444'
+            }}>
+              <div style={{ display: 'flex', alignItems: 'flex-start' }}>
+                <span style={{ fontSize: '1.5rem', marginRight: '12px' }}>⚠️</span>
+                <div>
+                  <h4 style={{ 
+                    color: '#dc2626', 
+                    fontWeight: '600', 
+                    margin: '0 0 8px 0',
+                    fontSize: '1rem'
+                  }}>
+                    Error
+                  </h4>
+                  <p style={{ 
+                    color: '#b91c1c', 
+                    margin: '0',
+                    fontSize: '0.9rem',
+                    lineHeight: '1.5'
+                  }}>
+                    {error}
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Add Task Form */}
+          <div style={{ 
+            padding: '30px', 
+            backgroundColor: 'white', 
+            borderBottom: '1px solid #e2e8f0' 
+          }}>
+            <div style={{ display: 'flex', gap: '15px' }}>
+              <input
+                type="text"
+                value={newTaskContent}
+                onChange={(e) => setNewTaskContent(e.target.value)}
+                placeholder="What needs to be done? ✨"
+                style={{
+                  flex: '1',
+                  padding: '15px 20px',
+                  border: '2px solid #e2e8f0',
+                  borderRadius: '12px',
+                  fontSize: '1rem',
+                  outline: 'none',
+                  transition: 'all 0.3s ease',
+                  backgroundColor: !account || loading ? '#f1f5f9' : 'white',
+                  color: 'black'
+                }}
+                disabled={!account || loading}
+                onFocus={(e) => e.target.style.borderColor = '#4f46e5'}
+                onBlur={(e) => e.target.style.borderColor = '#e2e8f0'}
+                onKeyPress={(e) => e.key === 'Enter' && createTask()}
+              />
+              <button
+                onClick={createTask}
+                disabled={!account || loading || !newTaskContent.trim()}
+                style={{
+                  background: !account || loading || !newTaskContent.trim() 
+                    ? '#9ca3af' 
+                    : 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                  color: 'white',
+                  border: 'none',
+                  padding: '15px 25px',
+                  borderRadius: '12px',
+                  fontSize: '1rem',
+                  fontWeight: '600',
+                  cursor: !account || loading || !newTaskContent.trim() ? 'not-allowed' : 'pointer',
+                  transition: 'all 0.3s ease',
+                  minWidth: '140px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px'
+                }}
+                onMouseOver={(e) => {
+                  if (!e.target.disabled) {
+                    e.target.style.transform = 'translateY(-2px)';
+                    e.target.style.boxShadow = '0 8px 20px rgba(16, 185, 129, 0.3)';
+                  }
+                }}
+                onMouseOut={(e) => {
+                  e.target.style.transform = 'translateY(0)';
+                  e.target.style.boxShadow = 'none';
+                }}
+              >
+                {loading && newTaskContent.trim() ? (
+                  <>
+                    <span style={{
+                      width: '16px',
+                      height: '16px',
+                      border: '2px solid transparent',
+                      borderTop: '2px solid white',
+                      borderRadius: '50%',
+                      animation: 'spin 1s linear infinite'
+                    }}></span>
+                    Adding...
+                  </>
+                ) : (
+                  <>➕ Add Task</>
+                )}
+              </button>
+            </div>
+          </div>
+
+          {/* Tasks List */}
+          <div style={{ padding: '30px' }}>
+            {loading && tasks.length === 0 ? (
+              <div style={{ textAlign: 'center', padding: '60px 20px' }}>
+                <div style={{
+                  width: '40px',
+                  height: '40px',
+                  border: '4px solid #e2e8f0',
+                  borderTop: '4px solid #4f46e5',
+                  borderRadius: '50%',
+                  animation: 'spin 1s linear infinite',
+                  margin: '0 auto 20px'
+                }}></div>
+                <p style={{ 
+                  color: '#64748b', 
+                  fontSize: '1.1rem',
+                  margin: '0'
+                }}>
+                  Loading your tasks...
+                </p>
+              </div>
+            ) : tasks.length === 0 ? (
+              <div style={{ textAlign: 'center', padding: '60px 20px' }}>
+                <div style={{ fontSize: '4rem', marginBottom: '20px' }}>📝</div>
+                <h3 style={{ 
+                  fontSize: '1.5rem', 
+                  fontWeight: '600', 
+                  color: '#1f2937', 
+                  margin: '0 0 12px 0' 
+                }}>
+                  No tasks yet
+                </h3>
+                <p style={{ 
+                  color: '#6b7280', 
+                  fontSize: '1.1rem',
+                  margin: '0',
+                  lineHeight: '1.6'
+                }}>
+                  {account 
+                    ? "Ready to add your first blockchain task? ✨" 
+                    : "Connect your MetaMask wallet to start managing tasks on the blockchain! 🚀"
+                  }
+                </p>
+              </div>
+            ) : (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+                {tasks.map((task, index) => (
+                  <div
+                    key={task.id}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      padding: '20px',
+                      borderRadius: '12px',
+                      border: '2px solid ' + (task.completed ? '#bbf7d0' : '#e2e8f0'),
+                      backgroundColor: task.completed ? '#f0fdf4' : '#ffffff',
+                      transition: 'all 0.3s ease',
+                      cursor: 'pointer',
+                      animationDelay: `${index * 100}ms`,
+                      animation: 'slideInUp 0.5s ease-out forwards'
+                    }}
+                    onMouseOver={(e) => {
+                      e.currentTarget.style.transform = 'translateY(-2px)';
+                      e.currentTarget.style.boxShadow = '0 8px 25px rgba(0,0,0,0.1)';
+                    }}
+                    onMouseOut={(e) => {
+                      e.currentTarget.style.transform = 'translateY(0)';
+                      e.currentTarget.style.boxShadow = 'none';
+                    }}
+                  >
+                    <input
+                      type="checkbox"
+                      checked={task.completed}
+                      onChange={() => toggleCompleted(task.id)}
+                      disabled={!account || loading}
+                      style={{
+                        width: '24px',
+                        height: '24px',
+                        marginRight: '20px',
+                        cursor: !account || loading ? 'not-allowed' : 'pointer',
+                        accentColor: '#10b981'
+                      }}
+                    />
+                    <span
+                      style={{
+                        flex: '1',
+                        fontSize: '1.1rem',
+                        lineHeight: '1.5',
+                        textDecoration: task.completed ? 'line-through' : 'none',
+                        color: task.completed ? '#059669' : '#1f2937',
+                        fontWeight: task.completed ? '500' : '400',
+                        transition: 'all 0.3s ease'
+                      }}
+                    >
+                      {task.content}
+                    </span>
+                    <span
+                      style={{
+                        fontSize: '0.8rem',
+                        fontWeight: '600',
+                        padding: '6px 14px',
+                        borderRadius: '20px',
+                        backgroundColor: task.completed ? '#dcfce7' : '#fef3c7',
+                        color: task.completed ? '#166534' : '#92400e',
+                        border: '1px solid ' + (task.completed ? '#bbf7d0' : '#fde68a')
+                      }}
+                    >
+                      {task.completed ? '✅ Completed' : '⏳ Pending'}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Footer */}
+          <div style={{ 
+            backgroundColor: '#f8fafc', 
+            padding: '25px 30px', 
+            textAlign: 'center', 
+            borderTop: '1px solid #e2e8f0' 
+          }}>
+            <p style={{ 
+              color: '#64748b', 
+              margin: '0 0 8px 0',
+              fontSize: '1rem',
+              fontWeight: '500'
+            }}>
+              🔗 Powered by Ethereum Smart Contracts
+            </p>
+            <p style={{ 
+              color: '#94a3b8', 
+              fontSize: '0.9rem',
+              fontFamily: 'monospace',
+              margin: '0'
+            }}>
+              Contract: {CONTRACT_ADDRESS.substring(0, 10)}...{CONTRACT_ADDRESS.slice(-8)}
+            </p>
+          </div>
+        </div>
       </div>
 
-      <div style={{ marginBottom: '20px' }}>
-        <input
-          type="text"
-          value={newTaskContent}
-          onChange={(e) => setNewTaskContent(e.target.value)}
-          placeholder="Add a new task..."
-          style={{
-            width: 'calc(100% - 100px)',
-            padding: '10px',
-            marginRight: '10px',
-            border: '1px solid #ddd',
-            borderRadius: '4px',
-            fontSize: '16px'
-          }}
-          disabled={!account || loading}
-        />
-        <button
-          onClick={createTask}
-          disabled={!account || loading || !newTaskContent.trim()}
-          style={{
-            backgroundColor: '#28a745',
-            color: 'white',
-            padding: '10px 15px',
-            border: 'none',
-            borderRadius: '5px',
-            cursor: 'pointer',
-            fontSize: '16px'
-          }}
-        >
-          {loading && newTaskContent.trim() ? 'Adding...' : 'Add Task'}
-        </button>
-      </div>
-
-      {loading && tasks.length === 0 && <p style={{ textAlign: 'center', color: '#555' }}>Loading tasks...</p>}
-
-      <ul style={{ listStyleType: 'none', padding: 0 }}>
-        {tasks.map((task) => (
-          <li
-            key={task.id}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              padding: '10px',
-              borderBottom: '1px solid #eee',
-              backgroundColor: task.completed ? '#f0f8ff' : 'white'
-            }}
-          >
-            <input
-              type="checkbox"
-              checked={task.completed}
-              onChange={() => toggleCompleted(task.id)}
-              style={{ marginRight: '10px', transform: 'scale(1.2)' }}
-              disabled={!account || loading}
-            />
-            <span
-              style={{
-                flexGrow: 1,
-                textDecoration: task.completed ? 'line-through' : 'none',
-                color: task.completed ? '#888' : '#333',
-                fontSize: '18px'
-              }}
-            >
-              {task.content}
-            </span>
-          </li>
-        ))}
-        {tasks.length === 0 && !loading && account && (
-            <p style={{ textAlign: 'center', color: '#555' }}>No tasks found. Add a new one!</p>
-        )}
-        {tasks.length === 0 && !loading && !account && (
-            <p style={{ textAlign: 'center', color: '#555' }}>Connect your MetaMask wallet to see and add tasks.</p>
-        )}
-      </ul>
+      {/* CSS Animations */}
+      <style dangerouslySetInnerHTML={{
+        __html: `
+          @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+          }
+          
+          @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+          }
+          
+          @keyframes slideInUp {
+            from {
+              opacity: 0;
+              transform: translateY(30px);
+            }
+            to {
+              opacity: 1;
+              transform: translateY(0);
+            }
+          }
+        `
+      }} />
     </div>
   );
 }
